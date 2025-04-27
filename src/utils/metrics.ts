@@ -69,7 +69,24 @@ export function topWords(msgs: Message[], topN = 20): WordCount[] {
     "ocultado",
     'minutos',
     'omitido',
-    'ligação'
+    'mensagem',
+    'ligação',
+    '2024',
+    '2025',
+    '2026',
+    '2027',
+    '2028',
+    '2029',
+    '2030',
+    '2031',
+    'minha',
+    'princesa',
+    'vídeo',
+    'áudio',
+    'segundos',
+    'minutos',
+    'horas',
+    'https',
   ];
   for (const { content } of msgs) {
     // Preserve accented letters by matching letters (incl. accents) and digits

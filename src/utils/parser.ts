@@ -14,7 +14,9 @@ const lineRegex = /^\[?(\d{2}\/\d{2}\/\d{4}), (\d{2}:\d{2}:\d{2})\]? (.*?): (.*)
  * Suporta mensagens que quebram em múltiplas linhas, juntando-as ao conteúdo da mensagem anterior.
  */
 export function parseChat(raw: string): Message[] {
-  const lines = raw.split(/\r?\n/);
+  // Normalize text to NFC to preserve accented characters
+  const normalizedRaw = raw.normalize('NFC');
+  const lines = normalizedRaw.split(/\r?\n/);
   const messages: Message[] = [];
   let currentMessage: Message | null = null;
 
@@ -23,7 +25,9 @@ export function parseChat(raw: string): Message[] {
 
     if (match) {
       // nova mensagem
-      const [, dateStr, timeStr, author, content] = match;
+      const [, dateStr, timeStr, author, rawContent] = match;
+      // Remove any leading timestamp patterns (e.g. [29/10/2024, 13:49:17] or '29/10/2024, 13:49:17 -') from content
+      const content = rawContent.replace(/^\[?\d{2}\/\d{2}\/\d{4},\s*\d{2}:\d{2}:\d{2}\]?\s*-?\s*/, '');
       const date = parse(`${dateStr} ${timeStr}`, 'dd/MM/yyyy HH:mm:ss', new Date());
 
       currentMessage = { date, author, content };
